@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, Loader2 } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -11,37 +11,54 @@ import {
 } from "./ui/table";
 import { Input } from "./ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { validateDataWithAI } from "@/utils/gemini";
+import ValidationPanel, { ValidationResult } from "./ValidationPanel";
 
 interface DataProps {
-    datasets:{
-        clients: any[] | null
-        workers: any[] | null
-        tasks: any[] | null
-    }
-    onExportExcel: (data: any[]) => void
-    onExportCSV: (data: any[]) => void
+    datasets: {
+        clients: any[] | null;
+        workers: any[] | null;
+        tasks: any[] | null;
+    };
+    onExportExcel: (data: any[]) => void;
+    onExportCSV: (data: any[]) => void;
 }
 
 const EditableTable = ({
-    data, 
+    data,
     type,
     onExportExcel,
-    onExportCSV
+    onExportCSV,
 }: {
-    data: any[]
-    type: string
-    onExportExcel: (data: any[], type: string) => void
-    onExportCSV: (data:any[], type: string) => void
+    data: any[];
+    type: string;
+    onExportExcel: (data: any[], type: string) => void;
+    onExportCSV: (data: any[], type: string) => void;
 }) => {
-    const [tableData, setTableData] = useState(data)
+    const [tableData, setTableData] = useState(data);
+    const [validationResult, setValidationResult] =
+        useState<ValidationResult | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (rowIdx: number, key: string, value: string) => {
-        const updated = [...tableData]
-        updated[rowIdx][key] = value
-        setTableData(updated)
-    }
+        const updated = [...tableData];
+        updated[rowIdx][key] = value;
+        setTableData(updated);
+    };
 
     const keys = Object.keys(tableData[0] || {});
+
+    const handleValidation = async () => {
+        setLoading(true);
+        try {
+            const result = await validateDataWithAI(tableData);
+            setValidationResult(result);
+        } catch (error) {
+            console.error("Validation failed:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="space-y-2">
@@ -76,7 +93,18 @@ const EditableTable = ({
                     </TableBody>
                 </Table>
             </div>
+
+            {validationResult && (
+                <ValidationPanel result={validationResult} />
+            )}
+
             <div className="flex justify-end gap-x-4">
+                <Button onClick={handleValidation} disabled={loading}>
+                    {loading && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {loading ? "Validating..." : "Validate Data with AI"}
+                </Button>
                 <Button onClick={() => onExportExcel(tableData, type)}>
                     <DownloadIcon className="mr-2 h-4 w-4" />
                     Export Excel
@@ -88,7 +116,7 @@ const EditableTable = ({
             </div>
         </div>
     );
-}
+};
 
 export default function DataTable({
     datasets,
@@ -98,9 +126,15 @@ export default function DataTable({
     return (
         <Tabs defaultValue="clients" className="w-full mt-4">
             <TabsList>
-                {datasets.clients && <TabsTrigger value="clients">Clients</TabsTrigger>}
-                {datasets.workers && <TabsTrigger value="workers">Workers</TabsTrigger>}
-                {datasets.tasks && <TabsTrigger value="tasks">Tasks</TabsTrigger>}
+                {datasets.clients && (
+                    <TabsTrigger value="clients">Clients</TabsTrigger>
+                )}
+                {datasets.workers && (
+                    <TabsTrigger value="workers">Workers</TabsTrigger>
+                )}
+                {datasets.tasks && (
+                    <TabsTrigger value="tasks">Tasks</TabsTrigger>
+                )}
             </TabsList>
 
             {datasets.clients && (
@@ -134,5 +168,5 @@ export default function DataTable({
                 </TabsContent>
             )}
         </Tabs>
-    )
+    );
 }

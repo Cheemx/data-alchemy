@@ -100,7 +100,7 @@ export default function FileUpload() {
                 const data = await parseFile(file);
                 console.log("Parsed Data: ", data);
 
-                const type = detectFileType(file.name)
+                const type = detectFileType(file.name);
                 if (type) {
                     setDatasets((prev) => ({
                         ...prev,
@@ -124,9 +124,10 @@ export default function FileUpload() {
         },
         validation: {
             accept: {
-                "clients/*": [".csv", ".xls", ".xlsx"],
-                "workers/*": [".csv", ".xls", ".xlsx"],
-                "tasks/*": [".csv", ".xls", ".xlsx"],
+                "text/csv": [".csv"],
+                "application/vnd.ms-excel": [".xls"],
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
             },
             maxSize: 10 * 1024 * 1024,
             maxFiles: 5,
@@ -175,13 +176,12 @@ export default function FileUpload() {
                                 file={file}
                             >
                                 {file.status === "pending" && (
-                                    <div className="aspect-video animate-pulse bg-black/20" />
+                                    <div className="h-12 animate-pulse bg-muted-foreground/20 rounded-md" />
                                 )}
                                 {file.status === "success" && (
-                                    <img
-                                        alt={`uploaded-${file.fileName}`}
-                                        className="aspect-video object-cover"
-                                    />
+                                    <div className="h-12 bg-muted-foreground/10 flex items-center justify-center rounded-md text-xs text-muted-foreground">
+                                        Uploaded
+                                    </div>
                                 )}
                                 <div className="flex items-center justify-between p-2 pl-4">
                                     <div className="min-w-0">
