@@ -1,0 +1,61 @@
+WorkerID,WorkerName,Skills,AvailableSlots,MaxLoadPerPhase,WorkerGroup,QualificationLevel
+W001,Alice Johnson,"Python,JavaScript,React","[1,2,3,4]",2,Development,4
+W002,Bob Smith,"Java,Spring,Docker","[1,3,5]",3,Development,5
+W003,Carol Davis,"Python,ML,TensorFlow","[2,4,5]",2,AI_ML,4
+W004,David Wilson,"JavaScript,Node.js,AWS","[1,2,4,5]",3,DevOps,3
+W005,Emma Brown,"Design,Figma,UX","[1,2,3]",2,Design,4
+W006,Frank Miller,"Java,Microservices,Kubernetes","[2,3,4,5]",4,Development,5
+W007,Grace Lee,"Python,Data Science,SQL","[1,3,4]",2,Analytics,4
+W008,Henry Taylor,"React,TypeScript,GraphQL","[1,2,5]",2,Frontend,3
+W009,Iris Chen,"DevOps,AWS,Terraform","[2,3,4]",3,DevOps,4
+W010,Jack Robinson,"Project Management,Agile","[1,2,3,4,5]",5,Management,5
+W100,Lucas Lee,???,"[1, 2, 3, 5]",2,AI_ML,5
+W101,Sophia Lee,"Java,React,ML","[2, 4]",1,DevOps,3
+W102,Amelia Patel,"React,Python,Docker","[1, 3, 5]",1,Development,1
+W103,Emma Lee,"Node.js,Python,Java,AWS","[1, 2, 4, 5]",1,Design,2
+W104,Sophia Patel,"SQL,Java,Python,Node.js","[3, 5]",3,Design,1
+W105,Mason Nguyen,"Figma,Node.js","[1, 3, 4, 5]",1,DevOps,5
+W106,Olivia Patel,"Node.js,SQL,Figma","[1, 2, 3, 4]",3,AI_ML,1
+W107,Amelia Nguyen,"Figma,SQL,ML,Java","[2, 4, 5]",3,Design,4
+W108,Ava Nguyen,,"[2, 4, 5]",2,Design,5
+W109,Sophia Lee,"SQL,Docker,ML","[1, 3, 4, 5]",3,AI_ML,4
+W110,Ava Lee,"React,TensorFlow,Node.js,ML","[2, 3, 5]",1,DevOps,2
+W111,,"SQL,Python","[1, 2, 4, 5]",1,Development,2
+W112,James Patel,"Java,Python,Docker","[1, 4, 5]",3,Design,2
+W113,Sophia Nguyen,,"[4, 5]",2,Development,3
+W114,Emma Patel,"Java,Docker,ML,SQL","[1, 2, 3, 4]",3,DevOps,4
+W115,Sophia Garcia,"React,Node.js,Docker,TensorFlow","[3, 5]",1,AI_ML,2
+W116,Lucas Nguyen,"AWS,Node.js,SQL","[1, 2, 5]",1,AI_ML,4
+W117,Noah Nguyen,,"[2, 3, 4, 5]",2,DevOps,3
+W118,Emma Lee,"SQL,Python","[1, 3, 4, 5]",1,Development,5
+W119,Mason Lee,"React,SQL,ML","[1, 3, 4, 5]",3,AI_ML,2
+W120,,"Node.js,Python,Docker","[2, 3, 4, 5]",3,DevOps,2
+W121,Liam Garcia,"React,AWS,Docker","[3, 4, 5]",3,AI_ML,5
+W122,Sophia Garcia,"Java,Figma","[1, 4, 5]",2,Development,5
+W123,Sophia Patel,"React,TensorFlow","[2, 3]",2,Development,3
+W124,Lucas Garcia,???,"[1, 2, 4, 5]",2,AI_ML,4
+W125,Noah Patel,"Python,SQL,Figma","[1, 2, 4, 5]",1,AI_ML,2
+W126,Emma Garcia,,"[2, 5]",3,DevOps,1
+W127,Mason Garcia,"AWS,Figma,Docker","[1, 2, 4]",2,Design,1
+W128,Amelia Garcia,"Docker,Node.js,SQL,AWS","[1, 3, 4, 5]",3,Design,4
+W129,Noah Garcia,"Figma,TensorFlow","[1, 2, 3]",3,Development,5
+W130,Noah Nguyen,"ML,Docker","[1, 2, 4, 5]",3,Development,4
+W131,Liam Patel,"ML,AWS,SQL,Java","[2, 4]",3,Design,3
+W132,Amelia Garcia,"ML,TensorFlow","[2, 3, 4, 5]",2,Design,1
+W133,Sophia Patel,"AWS,React,Node.js,Docker","[1, 4]",1,Design,1
+W134,Sophia Garcia,"Java,Docker,Python,AWS","[1, 3, 4, 5]",1,AI_ML,2
+W135,,???,"[2, 4, 5]",1,Development,4
+W136,,,"[1, 2, 3]",3,Development,2
+W137,Olivia Garcia,"React,Java","[2, 3, 4]",2,Design,5
+W138,Noah Patel,,"[1, 2, 4]",3,DevOps,1
+W139,,"AWS,SQL,Java,ML","[3, 5]",3,DevOps,4
+W140,Olivia Lee,"Java,React,AWS,TensorFlow","[1, 3, 4, 5]",1,AI_ML,3
+W141,Olivia Nguyen,"Node.js,Figma","[1, 3]",3,AI_ML,4
+W142,Liam Nguyen,"TensorFlow,React,SQL,Docker","[3, 4]",3,DevOps,5
+W143,James Nguyen,,"[1, 2, 3, 5]",2,Development,5
+W144,Mason Nguyen,,"[1, 2, 3, 4]",2,AI_ML,4
+W145,Emma Patel,"React,Python","[2, 3, 4]",2,Development,4
+W146,James Lee,"Figma,TensorFlow,React","[1, 2, 3, 4]",3,Design,4
+W147,Liam Nguyen,"AWS,React","[1, 2, 3, 5]",1,Design,2
+W148,Ava Lee,"Node.js,React,Docker,ML","[2, 3]",1,DevOps,3
+W149,James Garcia,"AWS,TensorFlow,Python,SQL","[1, 3, 4, 5]",3,AI_ML,1

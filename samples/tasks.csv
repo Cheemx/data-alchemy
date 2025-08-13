@@ -1,0 +1,61 @@
+TaskID,TaskName,Category,Duration,RequiredSkills,PreferredPhases,MaxConcurrent
+T001,Frontend Development,Development,3,"JavaScript,React","[1,2,3]",2
+T002,Backend API,Development,4,"Python,Java","[2,3,4]",1
+T003,Database Design,Development,2,"SQL,Database Design","[1,2]",1
+T004,ML Model Training,AI_ML,5,"Python,ML,TensorFlow","[3,4,5]",1
+T005,UI/UX Design,Design,2,"Design,Figma,UX","[1,2]",2
+T006,DevOps Setup,DevOps,3,"Docker,Kubernetes,AWS","[2,3,4]",1
+T007,Data Analysis,Analytics,3,"Python,SQL,Data Science","[2,3,4]",1
+T008,Mobile App,Development,4,"React,JavaScript","[3,4,5]",2
+T009,Security Audit,Security,2,"Security,Penetration Testing","[4,5]",1
+T010,Project Management,Management,6,"Project Management,Agile","[1,2,3,4,5]",1
+T100,Bug Fixing,AI_ML,4,"React,SQL",[4],1
+T101,API Development,AI_ML,2,"Figma,Node.js,Python",[4],2
+T102,Data Cleaning,AI_ML,3,"Java,React,ML,Docker","[1, 2]",2
+T103,Bug Fixing,Development,4,"Figma,Python,Docker","[2, 3]",3
+T104,???,AI_ML,5,"Figma,Docker,SQL","[2, 3, 4]",1
+T105,API Development,Development,5,"TensorFlow,Java,Node.js",[4],1
+T106,User Research,AI_ML,4,"Figma,Node.js,Java","[1, 2, 5]",2
+T107,API Development,DevOps,4,"Figma,TensorFlow,Java","[1, 3]",1
+T108,Cloud Migration,AI_ML,1,???,[4],2
+T109,???,Design,1,???,"[1, 3, 5]",3
+T110,User Research,Design,4,"AWS,Python,TensorFlow","[1, 3, 5]",2
+T111,Bug Fixing,Design,5,"Java,Node.js,SQL,Docker","[1, 3, 5]",3
+T112,Bug Fixing,Development,1,,[5],3
+T113,,AI_ML,3,"Java,Docker,ML,SQL","[2, 4]",2
+T114,Bug Fixing,AI_ML,1,"Docker,React,Figma,ML","[1, 4]",2
+T115,Cloud Migration,AI_ML,3,,"[1, 3]",2
+T116,,Development,2,"Figma,SQL,React","[1, 2, 4]",3
+T117,User Research,Development,3,"Node.js,Docker,React",[5],3
+T118,,Development,2,"ML,Node.js","[2, 3]",2
+T119,User Research,DevOps,2,"Docker,Figma,AWS,TensorFlow","[4, 5]",1
+T120,API Development,Design,2,"AWS,TensorFlow,Java,Docker",[3],2
+T121,Bug Fixing,AI_ML,5,"Docker,Node.js,Java,TensorFlow","[2, 4]",1
+T122,Data Cleaning,Development,3,,"[1, 4]",3
+T123,User Research,Design,1,"AWS,ML","[4, 5]",1
+T124,Cloud Migration,AI_ML,2,"Node.js,ML,TensorFlow,SQL",[5],1
+T125,Cloud Migration,DevOps,1,"Python,AWS","[2, 3, 4]",2
+T126,User Research,Development,4,"Figma,Node.js,SQL,React","[2, 3]",1
+T127,API Development,Development,1,"ML,TensorFlow,AWS,Figma",[4],1
+T128,User Research,AI_ML,3,???,"[4, 5]",3
+T129,Bug Fixing,Development,1,"Figma,Python,Node.js","[1, 5]",1
+T130,API Development,Development,1,"SQL,Node.js","[1, 3, 5]",1
+T131,???,Design,3,,"[1, 3, 4]",3
+T132,API Development,DevOps,3,"Docker,AWS","[1, 2, 3]",2
+T133,Data Cleaning,Design,5,???,"[2, 4]",1
+T134,Cloud Migration,AI_ML,2,"Figma,React","[2, 4]",3
+T135,Data Cleaning,AI_ML,4,"TensorFlow,Java","[1, 2, 3]",3
+T136,,Development,5,"Docker,TensorFlow,ML,Node.js","[1, 2, 4]",2
+T137,API Development,DevOps,2,"Docker,Figma,TensorFlow,AWS","[1, 3, 5]",2
+T138,API Development,Development,2,???,"[2, 4, 5]",3
+T139,,Design,4,"Node.js,React,Python,ML","[1, 2]",3
+T140,Data Cleaning,Development,1,"TensorFlow,Java,Python",[2],1
+T141,User Research,AI_ML,1,"SQL,Docker","[1, 4, 5]",1
+T142,Cloud Migration,DevOps,2,"Java,Docker","[1, 5]",2
+T143,User Research,Design,3,"Figma,ML",[3],1
+T144,Cloud Migration,DevOps,5,"ML,AWS,SQL,Python",[4],1
+T145,,DevOps,2,"TensorFlow,Docker,Java","[1, 3, 4]",3
+T146,Data Cleaning,DevOps,3,???,"[1, 3, 4]",1
+T147,API Development,Design,3,"SQL,Docker,Figma,AWS",[2],3
+T148,,DevOps,5,"React,Node.js,Java","[1, 2, 5]",1
+T149,User Research,Development,5,"SQL,Figma","[1, 5]",2
