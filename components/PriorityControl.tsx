@@ -228,14 +228,14 @@ export default function PriorityControl({
                 </div>
 
                 <div className='border-t pt-4'>
-                    <Label className='text-sm font-medium'>Weight Distribution</Label>
-                    <div>
+                    <Label className='text-sm font-medium mb-2 block'>Weight Distribution</Label>
+                    <div className='grid grid-cols-4 gap-x-6 gap-y-2'>
                         {Object.entries(priorities).map(([Key, value]) => {
                             const percentage = ((value / totalWeight) * 100).toFixed(1)
                             return (
-                                <div key={Key} className='text-center'>
-                                    <div className='text-xs font-medium capitalize'>{Key.replace(/([A_Z])/g, '$1')}</div>
-                                    <div className='text-lg font-bold'>{percentage}%</div>
+                                <div key={Key} className='text-center text-sm'>
+                                    <div className='font-medium capitalize'>{Key.replace(/([A_Z])/g, '$1')}</div>
+                                    <div className='text-sm font-bold'>{percentage}%</div>
                                 </div>
                             )
                         })}
