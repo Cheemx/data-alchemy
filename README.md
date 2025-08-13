@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Data Alchemy
 
-## Getting Started
+This project was built as a submission for the "Data Alchemist" assignment. It was my first experience working with CSV/XLSX data processing and UI rule-based validation logic. Given the complexity of the task and the short 3-day deadline, I have tried my best to implement as many functionalities as I could and as accurately as possible.
 
-First, run the development server:
+Although I could not complete the Assignment to the mark, but I've learned too many new possibilitis of Next.js and file handling. 
+
+Also Used TypeScript in this, it's really better than sole Javascript cause it helps a lot with compile time errors**Live Demo**: [data-alchemy](https://data-alchemy-kohl.vercel.app/)
+
+---
+
+##  Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (with TypeScript)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **CSV Parsing**: [PapaParse](https://www.papaparse.com/)
+- **Excel Parsing**: [xlsx](https://github.com/SheetJS/sheetjs)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+---
+
+## Features Implemented
+
+- **Data Ingestion**  
+  Upload and parse `.csv`, `.xls`, and `.xlsx` files directly in the browser.
+
+- **Validations & In-app Changes**  
+  Basic validation logic with support for inline editing and real-time validation feedback.
+
+- **Natural Language Data Retrieval (Regex-based)**  
+  Users can search data using simple natural language queries, parsed using regular expressions.
+
+- **Rule Input UI**  
+  Clean, dynamic UI for defining rules based on datasets.
+
+- **Prioritization and Weights (Partial) !!NOT COMPLETE!!**  
+  UI scaffolding and partial logic for adjusting rule-based weights and prioritizations.
+
+---
+
+## Features Not Implemented (Due to Time Constraints)
+
+- Prioritization & Weighting (Full Functional Logic)
+- Natural Language to Rule Converter
+- Natural Language-based Data Modification
+- AI-based Rule Recommendations
+- AI-driven Error Correction
+- AI-driven Validation System
+
+---
+
+## Notes
+
+- All functionalities implemented are built from scratch and tested to the best of my understanding.
+- Given more time, I would love to fully implement the AI components and natural language rule translation as described in the assignment brief and also it will help me gain my knowledge about Data Handling and working with AI agents.
+
+---
+
+## Project Structure
+
+- `/components` – UI, interaction & all logical components (Tables, Uploads, RuleBuilder, etc.)
+- `/utils` – Validation logic
+- `/app` – Single Page Component
+
+---
+
+## Getting Started Locally
 
 ```bash
+git clone https://github.com/yourusername/data-alchemy.git
+cd data-alchemy
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Final Thoughts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project was a great challenge. Although I couldn’t implement everything, I believe it’s a strong foundation and a good demonstration of my ability to learn quickly and build production-grade UI and logic under time constraints.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Feel free to explore the code or reach out for feedback!
+Thanks!
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
