@@ -15,20 +15,11 @@ import {
     AlertCircle,
     CheckCircle2,
     CloudUploadIcon,
-    Trash2Icon,
-    TrashIcon,
+    Trash2Icon
 } from "lucide-react";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
-import DataTable from "./DataTable";
-import {
-    DropdownMenu,
-    DropdownMenuItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import DataTable from "./DataTable"
 import {
     Card,
     CardContent,
@@ -46,14 +37,15 @@ import {
     SelectValue,
 } from "./ui/select";
 
+type RowData = Record<string, string | number | null | undefined>
+
 interface Datasets {
-    clients: any[] | null;
-    workers: any[] | null;
-    tasks: any[] | null;
+    clients: RowData[] | null;
+    workers: RowData[] | null;
+    tasks: RowData[] | null;
 }
 
 export default function FileUpload() {
-    const [parsedData, setParsedData] = useState<any[] | null>(null);
     const [datasets, setDatasets] = useState<Datasets>({
         clients: null,
         workers: null,
@@ -73,7 +65,7 @@ export default function FileUpload() {
         return null;
     };
 
-    const parseFile = (file: File): Promise<any[]> => {
+    const parseFile = (file: File): Promise<RowData[]> => {
         return new Promise((resolve, reject) => {
             const ext = file.name.split(".").pop()?.toLowerCase();
 
@@ -82,7 +74,7 @@ export default function FileUpload() {
             }
 
             if (ext === "csv") {
-                Papa.parse<any>(file, {
+                Papa.parse<RowData>(file, {
                     header: true,
                     skipEmptyLines: true,
                     complete: (results) => {
@@ -102,7 +94,7 @@ export default function FileUpload() {
                         const workbook = XLSX.read(data, { type: "array" });
                         const sheetName = workbook.SheetNames[0];
                         const sheet = workbook.Sheets[sheetName];
-                        const json: any[] = XLSX.utils.sheet_to_json(sheet, {
+                        const json: RowData[] = XLSX.utils.sheet_to_json(sheet, {
                             defval: null,
                         });
                         resolve(json);
@@ -258,7 +250,7 @@ export default function FileUpload() {
                                     Supports CSV, XLS, XLSX files
                                 </p>
                                 <p className="text-xs text-muted-foreground">
-                                    Name files like 'clients.csv' for
+                                    Name files like &apos;clients.csv&apos; for
                                     auto-detection
                                 </p>
                             </div>
@@ -320,13 +312,13 @@ export default function FileUpload() {
             {(datasets.clients || datasets.workers || datasets.tasks) && (
                 <DataTable
                     datasets={datasets}
-                    onExportExcel={(data: any[], type: string) => {
+                    onExportExcel={(data: RowData[], type: string) => {
                         const ws = XLSX.utils.json_to_sheet(data);
                         const wb = XLSX.utils.book_new();
                         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
                         XLSX.writeFile(wb, `${type}_exported.xlsx`);
                     }}
-                    onExportCSV={(data: any[], type: string) => {
+                    onExportCSV={(data: RowData[], type: string) => {
                         const csv = Papa.unparse(data);
                         const blob = new Blob([csv], {
                             type: "text/csv;charset=utf-8;",
