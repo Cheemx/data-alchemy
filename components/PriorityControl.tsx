@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from './ui/badge';
 import { Slider } from './ui/slider';
 
+type RowData = Record<string, string | number | null | undefined>;
+
 interface PrioritySettings {
     priorityLevel: number,
     taskFulfillment: number,
@@ -18,16 +20,16 @@ interface Rule {
     id: string;
     type: 'co-run' | 'load-limit' | 'phase-window' | 'skill-requirement';
     name: string;
-    parameters: Record<string, any>;
+    parameters: Record<string, RowData>;
 }
 
 interface PriorityControlsProps {
     priorities: PrioritySettings
     onPrioritiesChange: (priorities: PrioritySettings) => void
     datasets: {
-        clients: any[] | null
-        workers: any[] | null
-        tasks: any[] | null
+        clients: RowData[] | null
+        workers: RowData[] | null
+        tasks: RowData[] | null
     }
     rules?: Rule[]
 }
