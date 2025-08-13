@@ -117,8 +117,7 @@ const EditableTable = ({
                                                 }
                                                 className={
                                                     hasError
-                                                        ? cellError?.severity ===
-                                                          "error"
+                                                        ? cellError?.severity === "error"
                                                             ? "border-red-500 bg-red-50"
                                                             : "border-yellow-500 bg-yellow-50"
                                                         : ""
@@ -176,7 +175,6 @@ export default function DataTable({
 
     return (
         <div className="w-full mt-4 space-y-4">
-            
             <PriorityControl
                 priorities={priorities}
                 onPrioritiesChange={setPriorities}
