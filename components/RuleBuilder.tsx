@@ -1,25 +1,39 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "./ui/card";
 import { Label } from "./ui/label";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { Separator } from "./ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "./ui/select";
 import { Input } from "./ui/input";
+
+type RowData = Record<string, string | number | null | undefined>;
 
 interface Rule {
     id: string;
     type: "co-run" | "load-limit" | "phase-window" | "skill-requirement";
     name: string;
-    parameters: Record<string, any>;
+    parameters: Record<string, string | number | null | undefined>;
 }
 
 interface RuleBuilderProps {
     datasets: {
-        clients: any[] | null;
-        workers: any[] | null;
-        tasks: any[] | null;
+        clients: RowData[] | null;
+        workers: RowData[] | null;
+        tasks: RowData[] | null;
     };
     rules: Rule[];
     onRulesChange: (rules: Rule[]) => void;
@@ -33,8 +47,11 @@ export default function RuleBuilder({
     const [selectedRuleType, setSelectedRuleType] = useState<Rule["type"] | "">(
         ""
     );
-    const [newRule, setNewRule] = useState<Partial<Rule>>({
-        parameters: {}
+    const [newRule, setNewRule] = useState<{
+        name?: string;
+        parameters: Record<string, string | number | null | undefined>;
+    }>({
+        parameters: {},
     });
 
     const taskOptions =
@@ -46,11 +63,6 @@ export default function RuleBuilder({
     const workerGroups = [
         ...new Set(
             datasets.workers?.map((w) => w.WorkerGroup).filter(Boolean) || []
-        ),
-    ];
-    const clientGroups = [
-        ...new Set(
-            datasets.clients?.map((c) => c.GroupTag).filter(Boolean) || []
         ),
     ];
 
@@ -154,28 +166,30 @@ export default function RuleBuilder({
             id: `rule_${Date.now()}`,
             type: selectedRuleType,
             name: newRule.name,
-            parameters: {...newRule}
-        }
-        onRulesChange([...rules, rule])
-        setSelectedRuleType('')
-        setNewRule({})
-    }
+            parameters: newRule.parameters ?? {},
+        };
+        onRulesChange([...rules, rule]);
+        setSelectedRuleType("");
+        setNewRule(rule);
+    };
 
     const removeRule = (ruleId: string) => {
-        onRulesChange(rules.filter(rule => rule.id !== ruleId))
-    }
+        onRulesChange(rules.filter((rule) => rule.id !== ruleId));
+    };
 
     const updateRuleParameter = (key: string, value: any) => {
-        setNewRule(prev => ({
+        setNewRule((prev) => ({
             ...prev,
             parameters: {
                 ...prev.parameters,
-                [key]: value
-            }
-        }))
-    }
+                [key]: value,
+            },
+        }));
+    };
 
-    const currentTemplate = selectedRuleType ? ruleTemplates[selectedRuleType] : null
+    const currentTemplate = selectedRuleType
+        ? ruleTemplates[selectedRuleType]
+        : null;
 
     return (
         <Card>
@@ -191,13 +205,21 @@ export default function RuleBuilder({
                         <Label>Current Rules({rules.length})</Label>
                         <div className="space-y-2">
                             {rules.map((rule) => (
-                                <div key={rule.id} className="flex items-center justify-between p-3 border rounded-md bg-muted/30">
+                                <div
+                                    key={rule.id}
+                                    className="flex items-center justify-between p-3 border rounded-md bg-muted/30"
+                                >
                                     <div className="flex-1">
                                         <div className="fex items-center gap-2">
-                                            <Badge variant="outline" className="capitalize">
-                                                {rule.type.replace('-', '')}
+                                            <Badge
+                                                variant="outline"
+                                                className="capitalize"
+                                            >
+                                                {rule.type.replace("-", "")}
                                             </Badge>
-                                            <span className="font-medium">{rule.name}</span>
+                                            <span className="font-medium">
+                                                {rule.name}
+                                            </span>
                                         </div>
                                         {rule.parameters.description && (
                                             <p className="text-sm text-muted-foreground mt-1">
@@ -206,8 +228,8 @@ export default function RuleBuilder({
                                         )}
                                     </div>
                                     <Button
-                                        variant='ghost'
-                                        size='sm'
+                                        variant="ghost"
+                                        size="sm"
                                         onClick={() => removeRule(rule.id)}
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -224,19 +246,30 @@ export default function RuleBuilder({
 
                     <div>
                         <Label>Rule Type</Label>
-                        <Select value={selectedRuleType} onValueChange={(value: Rule['type']) => setSelectedRuleType(value)}>
+                        <Select
+                            value={selectedRuleType}
+                            onValueChange={(value: Rule["type"]) =>
+                                setSelectedRuleType(value)
+                            }
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Choose rule type..." />
                             </SelectTrigger>
                             <SelectContent>
-                                {Object.entries(ruleTemplates).map(([key, template]) => (
-                                    <SelectItem key={key} value={key}>
-                                        <div>
-                                            <div className="font-medium">{template.name}</div>
-                                            <div className="text-xs text-muted-foreground">{template.description}</div>
-                                        </div>
-                                    </SelectItem>
-                                ))}
+                                {Object.entries(ruleTemplates).map(
+                                    ([key, template]) => (
+                                        <SelectItem key={key} value={key}>
+                                            <div>
+                                                <div className="font-medium">
+                                                    {template.name}
+                                                </div>
+                                                <div className="text-xs text-muted-foreground">
+                                                    {template.description}
+                                                </div>
+                                            </div>
+                                        </SelectItem>
+                                    )
+                                )}
                             </SelectContent>
                         </Select>
                     </div>
@@ -246,83 +279,139 @@ export default function RuleBuilder({
                             <div className="space-y-2">
                                 <Label>Rule Name*</Label>
                                 <Input
-                                    value={newRule.name || ''}
-                                    onChange={(e) => 
-                                        setNewRule(prev => ({
+                                    value={newRule.name || ""}
+                                    onChange={(e) =>
+                                        setNewRule((prev) => ({
                                             ...prev,
-                                            name: e.target.value
+                                            name: e.target.value,
                                         }))
                                     }
-                                    placeholder={`${currentTemplate.name} #${rules.length + 1}`}
+                                    placeholder={`${currentTemplate.name} #${
+                                        rules.length + 1
+                                    }`}
                                 />
                             </div>
 
                             {currentTemplate.fields.map((field) => (
                                 <div key={field.key} className="space-y-2">
                                     <Label>{field.label}</Label>
-                                    {field.type === 'text' && (
+                                    {field.type === "text" && (
                                         <Input
-                                            value={newRule.parameters?.[field.key] || ''}
-                                            onChange={(e) => updateRuleParameter(field.key, e.target.value)}
+                                            value={
+                                                newRule.parameters?.[
+                                                    field.key
+                                                ] || ""
+                                            }
+                                            onChange={(e) =>
+                                                updateRuleParameter(
+                                                    field.key,
+                                                    e.target.value
+                                                )
+                                            }
                                             placeholder={field.placeholder}
                                         />
                                     )}
-                                    {field.type === 'number' && (
+                                    {field.type === "number" && (
                                         <Input
                                             type="number"
-                                            value={newRule.parameters?.[field.key] || ''}
-                                            onChange={(e) => updateRuleParameter(field.key, parseInt(e.target.value))}
+                                            value={
+                                                newRule.parameters?.[
+                                                    field.key
+                                                ] || ""
+                                            }
+                                            onChange={(e) =>
+                                                updateRuleParameter(
+                                                    field.key,
+                                                    parseInt(e.target.value)
+                                                )
+                                            }
                                         />
                                     )}
-                                    {field.type === 'select' && (
+                                    {field.type === "select" && (
                                         <Select
-                                            value={newRule.parameters?.[field.key] || ''}
-                                            onValueChange={(value) => updateRuleParameter(field.key, value)}
+                                            value={
+                                                (newRule.parameters?.[
+                                                    field.key
+                                                ] as string) || ""
+                                            }
+                                            onValueChange={(value) =>
+                                                updateRuleParameter(
+                                                    field.key,
+                                                    value
+                                                )
+                                            }
                                         >
                                             <SelectTrigger>
-                                                <SelectValue
-                                                    placeholder="Select..."
-                                                />
+                                                <SelectValue placeholder="Select..." />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {field.options?.map((option: any) => (
-                                                    <SelectItem key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </SelectItem>
-                                                ))}
+                                                {(field.options ?? []).map(
+                                                    (option) => (
+                                                        <SelectItem
+                                                            key={String(option.value)}
+                                                            value={String(option.value)}
+                                                        >
+                                                            {option.label}
+                                                        </SelectItem>
+                                                    )
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     )}
-                                    {field.type === 'multi-select' && (
+
+                                    {field.type === "multi-select" && (
                                         <Input
-                                            value={newRule.parameters?.[field.key] || ''}
-                                            onChange={(e) => updateRuleParameter(field.key, e.target.value)}
+                                            value={
+                                                newRule.parameters?.[
+                                                    field.key
+                                                ] || ""
+                                            }
+                                            onChange={(e) =>
+                                                updateRuleParameter(
+                                                    field.key,
+                                                    e.target.value
+                                                )
+                                            }
                                             placeholder="Enter comma-separated values: T1,T2,T3"
                                         />
                                     )}
                                 </div>
                             ))}
 
-                            <Button onClick={addRule} disabled={!newRule.name} className="w-full">
+                            <Button
+                                onClick={addRule}
+                                disabled={!newRule.name}
+                                className="w-full"
+                            >
                                 <Plus className="w-4 h-4 mr-2" />
                                 Add Rule
                             </Button>
                         </div>
                     )}
                 </div>
-                
+
                 {rules.length === 0 && (
                     <div className="text-sm text-muted-foreground space-y-1">
-                        <p><strong>Example rules you can create:</strong></p>
+                        <p>
+                            <strong>Example rules you can create:</strong>
+                        </p>
                         <ul className="list-disc list-inside space-y-1 ml-4">
-                            <li>Co-run: "Tasks T1 and T2 must run together"</li>
-                            <li>Load-limit: "Sales team max 3 tasks per phase"</li>
-                            <li>Phase-window: "Task T5 can only run in phases 1-3"</li>
-                            <li>Skill-requirement: "Task T10 needs Python and AI skills"</li>
+                            <li>Co-run: &quot;Tasks T1 and T2 must run together&quot;</li>
+                            <li>
+                                Load-limit: &quot;Sales team max 3 tasks per phase&quot;
+                            </li>
+                            <li>
+                                Phase-window: &quot;Task T5 can only run in phases
+                                1-3&quot;
+                            </li>
+                            <li>
+                                Skill-requirement: &quot;Task T10 needs Python and AI
+                                skills&quot;
+                            </li>
                         </ul>
                     </div>
                 )}
             </CardContent>
         </Card>
-    )
+    );
 }
