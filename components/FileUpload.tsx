@@ -11,7 +11,13 @@ import {
     DropzoneTrigger,
     useDropzone,
 } from "./ui/dropzone";
-import { CloudUploadIcon, Trash2Icon, TrashIcon } from "lucide-react";
+import {
+    AlertCircle,
+    CheckCircle2,
+    CloudUploadIcon,
+    Trash2Icon,
+    TrashIcon,
+} from "lucide-react";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
 import DataTable from "./DataTable";
@@ -23,18 +29,39 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Label } from "./ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "./ui/select";
+
+interface Datasets {
+    clients: any[] | null;
+    workers: any[] | null;
+    tasks: any[] | null;
+}
 
 export default function FileUpload() {
     const [parsedData, setParsedData] = useState<any[] | null>(null);
-    const [datasets, setDatasets] = useState<{
-        clients: any[] | null;
-        workers: any[] | null;
-        tasks: any[] | null;
-    }>({
+    const [datasets, setDatasets] = useState<Datasets>({
         clients: null,
         workers: null,
         tasks: null,
     });
+    const [selectedFileType, setSelectedFileType] = useState<
+        "clients" | "workers" | "tasks" | null
+    >(null);
 
     const detectFileType = (
         fileName: string
@@ -100,19 +127,27 @@ export default function FileUpload() {
                 const data = await parseFile(file);
                 console.log("Parsed Data: ", data);
 
-                const type = detectFileType(file.name);
-                if (type) {
-                    setDatasets((prev) => ({
-                        ...prev,
-                        [type]: data,
-                    }));
-                } else {
-                    setParsedData(data);
+                const detectedType = detectFileType(file.name);
+                const fileType = detectedType || selectedFileType;
+
+                if (!fileType) {
+                    return {
+                        status: "error",
+                        error: "Please select a file type (clients, workers, or tasks) before uploading, or name your file appropriately (e.g., 'clients.csv')",
+                    };
+                }
+                setDatasets((prev) => ({
+                    ...prev,
+                    [fileType]: data,
+                }));
+
+                if (!detectedType) {
+                    setSelectedFileType(null);
                 }
 
                 return {
                     status: "success",
-                    result: file.name,
+                    result: `Loaded as ${fileType} data (${data.length} rows)`,
                 };
             } catch (error) {
                 return {
@@ -130,39 +165,101 @@ export default function FileUpload() {
                     [".xlsx"],
             },
             maxSize: 10 * 1024 * 1024,
-            maxFiles: 5,
+            maxFiles: 3,
         },
     });
 
+    const loadedCount = Object.values(datasets).filter(Boolean).length;
+    const totalRows = Object.values(datasets).reduce(
+        (acc, dataset) => acc + (dataset?.length || 0),
+        0
+    );
+
     return (
         <div className="not-prose flex flex-col gap-4">
+            {/*Dataset Selector Card */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">
+                        Data Upload Status
+                    </CardTitle>
+                    <CardDescription>Upload CSV or Excel files</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex gap-4 items-center flex-wrap">
+                        <div className="text-sm">
+                            <span className="font-medium">{loadedCount}/3</span>
+                            Datasets loaded
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                            Total rows: {totalRows}
+                        </div>
+                        <div className="flex gap-2">
+                            {Object.entries(datasets).map(([Key, data]) => (
+                                <Badge
+                                    key={Key}
+                                    variant={data ? "default" : "secondary"}
+                                    className="capitalize"
+                                >
+                                    {data ? (
+                                        <CheckCircle2 className="w-3 h-3 mr-1" />
+                                    ) : (
+                                        <AlertCircle className="w-3 h-3 mr-1" />
+                                    )}
+                                    {Key} {data ? `(${data.length})` : ""}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <div className="space-y-2">
+                <Label htmlFor="file-type">
+                    Select File Type(if not auto detected from filename)
+                </Label>
+                <Select
+                    value={selectedFileType || ""}
+                    onValueChange={(value: "clients" | "workers" | "tasks") =>
+                        setSelectedFileType(value)
+                    }
+                >
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Choose file type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="clients">Clients</SelectItem>
+                        <SelectItem value="workers">Workers</SelectItem>
+                        <SelectItem value="tasks">Tasks</SelectItem>
+                    </SelectContent>
+                </Select>
+                {selectedFileType && (
+                    <p className="text-xs text-muted-foreground">
+                        Next file will be uploaded as:{" "}
+                        <strong>{selectedFileType}</strong>
+                    </p>
+                )}
+            </div>
+
             <Dropzone {...dropzone}>
                 <div>
                     <div className="flex justify-between">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuLabel>
-                                    Select dataset
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>Clients</DropdownMenuItem>
-                                <DropdownMenuItem>Workers</DropdownMenuItem>
-                                <DropdownMenuItem>Tasks</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                         <DropzoneDescription>
-                            Please Select file to upload
+                            Drop Files here or click to upload
                         </DropzoneDescription>
                         <DropzoneMessage />
                     </div>
                     <DropZoneArea>
-                        <DropzoneTrigger className="flex flex-col items-center gap-2 bg-transparent p-6 rounded-md border border-dashed text-center text-sm">
+                        <DropzoneTrigger className="flex flex-col items-center gap-2 bg-transparent p-6 rounded-md border border-dashed text-center text-sm hover:bg-muted/50 transition-colors">
                             <CloudUploadIcon className="size-8" />
                             <div>
                                 <p className="font-semibold">Upload File</p>
                                 <p className="text-sm text-muted-foreground">
-                                    Click here or drag and drop to upload
+                                    Supports CSV, XLS, XLSX files
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                    Name files like 'clients.csv' for
+                                    auto-detection
                                 </p>
                             </div>
                         </DropzoneTrigger>
@@ -179,8 +276,14 @@ export default function FileUpload() {
                                     <div className="h-12 animate-pulse bg-muted-foreground/20 rounded-md" />
                                 )}
                                 {file.status === "success" && (
-                                    <div className="h-12 bg-muted-foreground/10 flex items-center justify-center rounded-md text-xs text-muted-foreground">
-                                        Uploaded
+                                    <div className="h-12 bg-green-100 flex items-center justify-center rounded-md text-xs text-green-700">
+                                        Success
+                                    </div>
+                                )}
+                                {file.status === "error" && (
+                                    <div className="h-12 bg-red-100 flex items-center justify-center rounded-md text-xs text-red-700">
+                                        <AlertCircle className="w-4 h-4 mr-1" />
+                                        Error
                                     </div>
                                 )}
                                 <div className="flex items-center justify-between p-2 pl-4">
@@ -189,9 +292,19 @@ export default function FileUpload() {
                                             {file.fileName}
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            {(file.file.size / 1024).toFixed(2)}{" "}
+                                            {(file.file.size / 1024).toFixed(2)}
                                             KB
                                         </p>
+                                        {file.status === "success" && file.result && (
+                                            <p className="text-xs text-green-600">
+                                                {file.result}
+                                            </p>
+                                        )}
+                                        {file.status==="error" && file.error && (
+                                            <p className="text-xs text-red-600 truncate">
+                                                {file.error}
+                                            </p>
+                                        )}
                                     </div>
                                     <DropzoneRemoveFile>
                                         <Trash2Icon className="size-4" />
@@ -202,26 +315,29 @@ export default function FileUpload() {
                     </DropzoneFileList>
                 </div>
             </Dropzone>
+
+
             {(datasets.clients || datasets.workers || datasets.tasks) && (
                 <DataTable
                     datasets={datasets}
-                    onExportExcel={(updatedData) => {
-                        const ws = XLSX.utils.json_to_sheet(updatedData);
+                    onExportExcel={(data: any[], type: string) => {
+                        const ws = XLSX.utils.json_to_sheet(data);
                         const wb = XLSX.utils.book_new();
                         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-                        XLSX.writeFile(wb, `exported_data.xlsx`);
+                        XLSX.writeFile(wb, `${type}_exported.xlsx`);
                     }}
-                    onExportCSV={(updatedData) => {
-                        const csv = Papa.unparse(updatedData);
+                    onExportCSV={(data: any[], type: string) => {
+                        const csv = Papa.unparse(data);
                         const blob = new Blob([csv], {
                             type: "text/csv;charset=utf-8;",
                         });
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement("a");
                         link.href = url;
-                        link.setAttribute("download", "exported_data.csv");
+                        link.setAttribute("download", `${type}_exported.csv`);
                         document.body.appendChild(link);
                         link.click();
+                        URL.revokeObjectURL(url)
                     }}
                 />
             )}
