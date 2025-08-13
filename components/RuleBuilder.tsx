@@ -177,7 +177,7 @@ export default function RuleBuilder({
         onRulesChange(rules.filter((rule) => rule.id !== ruleId));
     };
 
-    const updateRuleParameter = (key: string, value: any) => {
+    const updateRuleParameter = (key: keyof Rule['parameters'], value: string | number) => {
         setNewRule((prev) => ({
             ...prev,
             parameters: {
