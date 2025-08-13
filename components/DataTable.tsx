@@ -15,6 +15,15 @@ import { validateDataWithAI } from "@/utils/gemini";
 import ValidationPanel, { ValidationResult } from "./ValidationPanel";
 import SearchBar from "./SearchBar";
 import { validateData } from "@/utils/validation";
+import PriorityControl from "./PriorityControl";
+import RuleBuilder from "./RuleBuilder";
+
+interface Rule {
+    id: string;
+    type: "co-run" | "load-limit" | "phase-window" | "skill-requirement";
+    name: string;
+    parameters: Record<string, any>;
+}
 
 interface DataProps {
     datasets: {
@@ -32,20 +41,21 @@ const EditableTable = ({
     onExportExcel,
     onExportCSV,
 }: {
-    data: any[]
-    type: 'clients' | 'workers' | 'tasks'
-    onExportExcel: (data: any[], type: string) => void
-    onExportCSV: (data: any[], type: string) => void
+    data: any[];
+    type: "clients" | "workers" | "tasks";
+    onExportExcel: (data: any[], type: string) => void;
+    onExportCSV: (data: any[], type: string) => void;
 }) => {
     const [tableData, setTableData] = useState(data);
-    const [filteredData, setFilteredData] = useState(data)
-    const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-    const [loading, setLoading] = useState(false)
+    const [filteredData, setFilteredData] = useState(data);
+    const [validationResult, setValidationResult] =
+        useState<ValidationResult | null>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const result = validateData(tableData, type)
-        setValidationResult(result)
-    }, [tableData, type])
+        const result = validateData(tableData, type);
+        setValidationResult(result);
+    }, [tableData, type]);
 
     const handleChange = (rowIdx: number, key: string, value: string) => {
         const updated = [...tableData];
@@ -53,27 +63,25 @@ const EditableTable = ({
         setTableData(updated);
     };
 
-    
     const handleValidation = () => {
-        setLoading(true)
+        setLoading(true);
         setTimeout(() => {
-            const result = validateData(tableData, type)
-            setValidationResult(result)
-            setLoading(false)
-        }, 500)
-    }
+            const result = validateData(tableData, type);
+            setValidationResult(result);
+            setLoading(false);
+        }, 500);
+    };
 
     const keys = Object.keys(tableData[0] || {});
 
     const getCellError = (rowIdx: number, field: string) => {
-        return validationResult?.errors.find(error =>
-            error.rowIndex === rowIdx && error.field === field
-        )
-    }
+        return validationResult?.errors.find(
+            (error) => error.rowIndex === rowIdx && error.field === field
+        );
+    };
 
     return (
         <div className="space-y-4">
-
             <SearchBar
                 data={tableData}
                 onSearchResults={(results) => setFilteredData(results)}
@@ -93,24 +101,31 @@ const EditableTable = ({
                         {tableData.map((row, rowIdx) => (
                             <TableRow key={rowIdx}>
                                 {keys.map((key) => {
-                                    const cellError = getCellError(rowIdx, key)
-                                    const hasError = !!cellError
+                                    const cellError = getCellError(rowIdx, key);
+                                    const hasError = !!cellError;
 
                                     return (
                                         <TableCell key={key}>
                                             <Input
                                                 value={row[key] ?? ""}
-                                                onChange={(e) => 
+                                                onChange={(e) =>
                                                     handleChange(
                                                         rowIdx,
                                                         key,
                                                         e.target.value
                                                     )
                                                 }
-                                                className={hasError ? cellError?.severity === 'error' ? "border-red-500 bg-red-50":"border-yellow-500 bg-yellow-50":""}
+                                                className={
+                                                    hasError
+                                                        ? cellError?.severity ===
+                                                          "error"
+                                                            ? "border-red-500 bg-red-50"
+                                                            : "border-yellow-500 bg-yellow-50"
+                                                        : ""
+                                                }
                                             />
                                         </TableCell>
-                                    )
+                                    );
                                 })}
                             </TableRow>
                         ))}
@@ -118,9 +133,7 @@ const EditableTable = ({
                 </Table>
             </div>
 
-            {validationResult && (
-                <ValidationPanel result={validationResult} />
-            )}
+            {validationResult && <ValidationPanel result={validationResult} />}
 
             <div className="flex justify-end gap-x-4">
                 <Button onClick={handleValidation} disabled={loading}>
@@ -151,57 +164,82 @@ export default function DataTable({
         priorityLevel: 1,
         taskFulfillment: 1,
         fairness: 1,
-        efficiency: 1
-    })
+        efficiency: 1,
+    });
+    const [rules, setRules] = useState<Rule[]>([]);
 
-    const availableTabs =Object.entries(datasets).filter(([_, data]) => data != null).map(([key, _]) => key)
+    const availableTabs = Object.entries(datasets)
+        .filter(([_, data]) => data != null)
+        .map(([key, _]) => key);
 
-    const defaultTab = availableTabs[0] || 'clients'
+    const defaultTab = availableTabs[0] || "clients";
 
     return (
-        <Tabs defaultValue={defaultTab} className="w-full">
-            <TabsList>
+        <div className="w-full mt-4 space-y-4">
+            
+            <PriorityControl
+                priorities={priorities}
+                onPrioritiesChange={setPriorities}
+                datasets={datasets}
+                rules={rules}
+            />
+
+            <RuleBuilder
+                datasets={datasets}
+                rules={rules}
+                onRulesChange={setRules}
+            />
+
+            <Tabs defaultValue={defaultTab} className="w-full">
+                <TabsList>
+                    {datasets.clients && (
+                        <TabsTrigger value="clients">
+                            Clients({datasets.clients.length})
+                        </TabsTrigger>
+                    )}
+                    {datasets.workers && (
+                        <TabsTrigger value="workers">
+                            Workers({datasets.workers.length})
+                        </TabsTrigger>
+                    )}
+                    {datasets.tasks && (
+                        <TabsTrigger value="tasks">
+                            Tasks({datasets.tasks.length})
+                        </TabsTrigger>
+                    )}
+                </TabsList>
+
                 {datasets.clients && (
-                    <TabsTrigger value="clients">Clients({datasets.clients.length})</TabsTrigger>
+                    <TabsContent value="clients">
+                        <EditableTable
+                            data={datasets.clients}
+                            type="clients"
+                            onExportCSV={onExportCSV}
+                            onExportExcel={onExportExcel}
+                        />
+                    </TabsContent>
                 )}
                 {datasets.workers && (
-                    <TabsTrigger value="workers">Workers({datasets.workers.length})</TabsTrigger>
+                    <TabsContent value="workers">
+                        <EditableTable
+                            data={datasets.workers}
+                            type="workers"
+                            onExportCSV={onExportCSV}
+                            onExportExcel={onExportExcel}
+                        />
+                    </TabsContent>
                 )}
                 {datasets.tasks && (
-                    <TabsTrigger value="tasks">Tasks({datasets.tasks.length})</TabsTrigger>
+                    <TabsContent value="tasks">
+                        <EditableTable
+                            data={datasets.tasks}
+                            type="tasks"
+                            onExportCSV={onExportCSV}
+                            onExportExcel={onExportExcel}
+                        />
+                    </TabsContent>
                 )}
-            </TabsList>
-
-            {datasets.clients && (
-                <TabsContent value="clients">
-                    <EditableTable
-                        data={datasets.clients}
-                        type="clients"
-                        onExportCSV={onExportCSV}
-                        onExportExcel={onExportExcel}
-                    />
-                </TabsContent>
-            )}
-            {datasets.workers && (
-                <TabsContent value="workers">
-                    <EditableTable
-                        data={datasets.workers}
-                        type="workers"
-                        onExportCSV={onExportCSV}
-                        onExportExcel={onExportExcel}
-                    />
-                </TabsContent>
-            )}
-            {datasets.tasks && (
-                <TabsContent value="tasks">
-                    <EditableTable
-                        data={datasets.tasks}
-                        type="tasks"
-                        onExportCSV={onExportCSV}
-                        onExportExcel={onExportExcel}
-                    />
-                </TabsContent>
-            )}
-        </Tabs>
+            </Tabs>
+        </div>
     );
 }
