@@ -23,7 +23,7 @@ interface Rule {
     id: string;
     type: "co-run" | "load-limit" | "phase-window" | "skill-requirement";
     name: string;
-    parameters: Record<string, RowData>;
+    parameters: Record<string, string | number | null | undefined>;
 }
 
 interface DataProps {
