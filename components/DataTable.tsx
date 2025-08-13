@@ -10,29 +10,30 @@ import {
     TableRow,
 } from "./ui/table";
 import { Input } from "./ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { validateDataWithAI } from "@/utils/gemini";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import ValidationPanel, { ValidationResult } from "./ValidationPanel";
 import SearchBar from "./SearchBar";
 import { validateData } from "@/utils/validation";
 import PriorityControl from "./PriorityControl";
 import RuleBuilder from "./RuleBuilder";
 
+type RowData = Record<string, string | number | null | undefined>
+
 interface Rule {
     id: string;
     type: "co-run" | "load-limit" | "phase-window" | "skill-requirement";
     name: string;
-    parameters: Record<string, any>;
+    parameters: Record<string, RowData>;
 }
 
 interface DataProps {
     datasets: {
-        clients: any[] | null;
-        workers: any[] | null;
-        tasks: any[] | null;
+        clients: RowData[] | null;
+        workers: RowData[] | null;
+        tasks: RowData[] | null;
     };
-    onExportExcel: (data: any[], type: string) => void;
-    onExportCSV: (data: any[], type: string) => void;
+    onExportExcel: (data: RowData[], type: string) => void;
+    onExportCSV: (data: RowData[], type: string) => void;
 }
 
 const EditableTable = ({
@@ -41,13 +42,12 @@ const EditableTable = ({
     onExportExcel,
     onExportCSV,
 }: {
-    data: any[];
+    data: RowData[];
     type: "clients" | "workers" | "tasks";
-    onExportExcel: (data: any[], type: string) => void;
-    onExportCSV: (data: any[], type: string) => void;
+    onExportExcel: (data: RowData[], type: string) => void;
+    onExportCSV: (data: RowData[], type: string) => void;
 }) => {
-    const [tableData, setTableData] = useState(data);
-    const [filteredData, setFilteredData] = useState(data);
+    const [tableData, setTableData] = useState(data)
     const [validationResult, setValidationResult] =
         useState<ValidationResult | null>(null);
     const [loading, setLoading] = useState(false);
@@ -84,7 +84,7 @@ const EditableTable = ({
         <div className="space-y-4">
             <SearchBar
                 data={tableData}
-                onSearchResults={(results) => setFilteredData(results)}
+                onSearchResults={(results) => setTableData(results)}
                 placeholder={`Search in ${type}`}
             />
 
